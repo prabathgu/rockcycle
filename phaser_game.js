@@ -3,7 +3,7 @@ const rocks = ['sandstone','halite','quartzite','pumice','limestone',
                'granite','obsidian','marble','gneiss'];
 
 
-function drawBubble(parent, x, y, width, height) {
+function drawBubble(parent, x, y, width, height, color) {
     var bubble = parent.add.graphics({ x: x, y: y });
 
     //  Bubble shadow
@@ -14,7 +14,7 @@ function drawBubble(parent, x, y, width, height) {
     bubble.fillStyle(0xffffff, 1);
 
     //  Bubble outline line style
-    bubble.lineStyle(6, 0x4585BF, 1);
+    bubble.lineStyle(6, Phaser.Display.Color.ValueToColor(color).color, 1);
 
     //  Bubble shape and outline
     bubble.strokeRoundedRect(0, 0, width, height, 16);
@@ -23,8 +23,8 @@ function drawBubble(parent, x, y, width, height) {
     return bubble;
 }
             
-function createTextBubble(parent, x, y, text, fontSize, callback) {
-    const textSettings = { fontFamily: 'Helvetica Neue', fontSize: fontSize, color: '#4585BF', align: 'center' };
+function createTextBubble(parent, x, y, text, fontSize, color, callback) {
+    const textSettings = { fontFamily: 'Helvetica Neue', fontSize: fontSize, color: color, align: 'center' };
     const pad = 15;
 
     //infoBubble = drawBubble(x, y, width, height);
@@ -32,7 +32,7 @@ function createTextBubble(parent, x, y, text, fontSize, callback) {
     let bounds = dummyContent.getBounds();
     dummyContent.destroy();
 
-    let bubble = drawBubble(parent, x, y, bounds.width + pad * 2, bounds.height + pad * 2);
+    let bubble = drawBubble(parent, x, y, bounds.width + pad * 2, bounds.height + pad * 2, color);
     let content = parent.add.text(x + pad, y + pad, text, textSettings);
 
     let shape = parent.add.rectangle(x, y, bounds.width + pad * 2, bounds.height + pad * 2).setOrigin(0,0);
@@ -55,9 +55,9 @@ class Title extends Phaser.Scene {
         let { width, height } = this.sys.game.canvas;
         this.add.image(width/2, height/2, 'title');
 
-        createTextBubble(this, 250, height - 100, ' Image Sources ', 30, () => this.scene.start('image_sources'));
+        createTextBubble(this, 250, height - 75, ' Image Sources ', 15, '#AAAAAA', () => this.scene.start('image_sources'));
     
-        createTextBubble(this, width / 2 - 150, height / 2 + 150, '  Click to Begin  ', 40, () => this.scene.start('sort_page'));
+        createTextBubble(this, width / 2 - 150, height / 2 + 150, '  Click to Begin  ', 40, '#4585BF', () => this.scene.start('sort_page'));
     }
 }
                
@@ -74,7 +74,7 @@ class ImageSources extends Phaser.Scene {
         let { width, height } = this.sys.game.canvas;
         this.add.image(width/2, height/2, 'image_sources');
 
-        createTextBubble(this, 270, height - 100, '  Back  ', 30, () => this.scene.start('title'));
+        createTextBubble(this, 270, height - 100, '  Back  ', 30, '#4585BF', () => this.scene.start('title'));
     }
 }
                
@@ -95,7 +95,7 @@ class SortPage extends Phaser.Scene {
         let { width, height } = this.sys.game.canvas;
         this.add.image(width/2, height/2, 'sort_page');
 
-        createTextBubble(this, width - 350, height - 100, '  Next  ', 30, () => this.scene.start('game'));
+        createTextBubble(this, width - 350, height - 100, '  Next  ', 30, '#4585BF', () => this.scene.start('game'));
 
         let yStep = height / 5;
         let x = 0, y = 0;
@@ -167,7 +167,7 @@ class Game extends Phaser.Scene {
         let {bubble, content, shape} = createTextBubble(
             this, 20, height / 2 - 30,
             ' Read the rock formation descriptions. Then drag each rock to where you think it formed ',
-            33, () => {});
+            33, '#4585BF', () => {});
         
         let timer = this.time.delayedCall(5000, 
             function(bubble, content, shape) {
